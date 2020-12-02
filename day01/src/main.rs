@@ -1,3 +1,6 @@
+use std::collections::HashSet;
+use std::iter::FromIterator;
+
 fn lines_of_strings_to_vec(input: &str) -> Vec<i32> {
     input
         .split("\n")
@@ -44,4 +47,19 @@ fn main() {
         Some((x, y, z)) => println!("part2 (triple that adds up to 2020) = {}", x * y * z),
         None => panic!("ohno! no triple that adds up to 2020 can be found in the input!"),
     }
+
+    dbg!(find_entries(&numbers));
+}
+
+// seen this solution later which is pretty nice:
+// https://twitter.com/imjasonmiller/status/1333748461209055233?s=20
+// TIL .find_map
+//
+
+fn find_entries(xs: &[i32]) -> Option<i32> {
+    let entries = HashSet::<i32>::from_iter(xs.iter().copied());
+    entries
+        .iter()
+        .find_map(|x| entries.get(&(2020 - x)).map(|y| (*x, *y)))
+        .map(|(x, y)| x * y)
 }
